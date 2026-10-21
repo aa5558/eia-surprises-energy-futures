@@ -91,7 +91,8 @@ def run(d: ds.Dataset, preds: pd.DataFrame, sig: pd.Series, rule: str, k: float,
     return results
 
 
-def perf_of(results, start=START, end=END, drop=None) -> tuple[dict, pd.DataFrame]:
+def perf_of(results, start=None, end=None, drop=None) -> tuple[dict, pd.DataFrame]:
+    start, end = start or START, end or END     # read at call time (dry run rebinds)
     w = st.combine(results, start, end)
     if drop is not None:
         w = w[~((w.index >= drop[0]) & (w.index <= drop[1]))]
@@ -115,17 +116,33 @@ def year_block_permutation(sig: pd.Series, preds: pd.DataFrame, rng) -> pd.Serie
     return out
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
+    """``--dry-run`` exercises the whole script on development data only (2012-2016 as a
+    stand-in test window, fewer draws, separate output folder) to catch bugs before the
+    freeze. It never touches 2017+ data."""
+    global TAB, FIG, TEST_YEARS, START, END, PERM_DRAWS, RANDOM_SIGN_DRAWS
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dry-run", action="store_true")
+    dry = ap.parse_args(argv).dry_run
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     style.apply()
-    tag = verify_frozen()
+    period = "full"
+    if dry:
+        TAB, FIG = TAB.parent / "phase7_dryrun_dev", FIG.parent / "phase7_dryrun_dev"
+        TEST_YEARS, START, END = list(range(2012, 2017)), "2012-01-01", "2016-12-30"
+        PERM_DRAWS, RANDOM_SIGN_DRAWS, period = 50, 50, "development"
+        tag = "DRY-RUN (development data only)"
+    else:
+        tag = verify_frozen()
     spec = yaml.safe_load((REPO_ROOT / "configs" / "frozen_spec.yaml").read_text())
     zcols, lam, model, k = (spec["z_columns"], float(spec["ridge_lambda"]),
                             spec["forecast_model"], float(spec["threshold_k"]))
     choice = spec["surprise_models"]
     summary = {"tag": tag, "spec": spec}
 
-    d = ds.build("full")
+    d = ds.build(period)
     ev = d.events
     test_ev = ev[(ev["week"] >= START) & (ev["entry_date"] <= END)]
     prec, cons = test_ev[test_ev["timing"] == "precise"], test_ev[test_ev["timing"] ==
@@ -170,7 +187,8 @@ def main() -> None:
     _tab(w_primary.reset_index(names="week_ending"), "primary_weekly_test.csv")
 
     # --- inference on the primary metric
-    boot = inf.bootstrap_sharpe_ci(w_primary["net_ret"], 52, mean_block=8, reps=5000)
+    boot = inf.bootstrap_sharpe_ci(w_primary["net_ret"], 52, mean_block=8,
+                                   reps=500 if dry else 5000)
     dsr = inf.deflated_sharpe(w_primary["net_ret"], spec["dsr_inputs"]["n_trials"],
                               spec["dsr_inputs"]["var_per_period_sharpe"])
     rs = st.random_sign_sharpes(d, res_primary, RANDOM_SIGN_DRAWS, "base", START, END)
@@ -183,6 +201,9 @@ def main() -> None:
 
     def variant(name, results, **kw):
         p, w = perf_of(results, **kw)
+        if len(w) < 26:          # e.g. sub-periods outside a dry run's window
+            log.info("variant %s skipped: %d weeks", name, len(w))
+            return
         rob.append({"variant": name, **p})
         weekly[f"rob::{name}"] = w["net_ret"]
 
@@ -199,10 +220,9 @@ def main() -> None:
             run(d, stale, md.signal(stale, model), "threshold", k))
     # cross-target: each market traded on the other market's forecast for the same week
     other = preds.assign(market=preds["market"].map({"CL": "RB", "RB": "CL"}))
-    cross = preds.merge(other[["market", "week", model, f"sd_fit_{model}"]],
-                        on=["market", "week"], how="left", suffixes=("", "_x"))
-    variant("placebo_cross_target",
-            run(d, preds, cross[f"{model}_x"] / cross[f"sd_fit_{model}_x"], "threshold", k))
+    other["xsig"] = md.signal(other, model)
+    cross = preds.merge(other[["market", "week", "xsig"]], on=["market", "week"], how="left")
+    variant("placebo_cross_target", run(d, preds, cross["xsig"], "threshold", k))
     for alt in ("five_year", "seasonal", "seasonal_ar"):
         cols = [f"z_{s}_{alt}" for s in md.SURPRISES]
         pa = forecasts(prim, cols, lam)
@@ -223,7 +243,7 @@ def main() -> None:
     pcf = forecasts(pc, zcols, lam)
     variant("conservative_timing", run(d, pcf, md.signal(pcf, model), "threshold", k))
     for n in (3, 10):
-        dn = ds.build("full", roll_days=n)
+        dn = ds.build(period, roll_days=n)
         pn = forecasts(md.primary_events(dn.events), zcols, lam)
         variant(f"roll_offset_{n}", run(dn, pn, md.signal(pn, model), "threshold", k))
     _tab(pd.DataFrame(rob), "robustness_test.csv")
@@ -242,7 +262,7 @@ def main() -> None:
     cols = {n: s for n, s in weekly.items()
             if not ("placebo" in n or "excl_" in n or "sub_" in n or "bench" in n)}
     spa_df = pd.DataFrame(cols).fillna(0.0)
-    summary["spa"] = inf.spa_test(spa_df, mean_block=8, reps=5000)
+    summary["spa"] = inf.spa_test(spa_df, mean_block=8, reps=500 if dry else 5000)
 
     c1 = boot["ci_low"] > 0
     c2 = dsr["dsr"] > 0.95

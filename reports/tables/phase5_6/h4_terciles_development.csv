@@ -1,0 +1,9 @@
+sample,market,tercile,nobs,slope,t
+development_precise,CL,low_stocks,32,0.00158342677236497,0.5690914739704814
+development_precise,CL,high_stocks,147,-0.008119451955018751,-3.136057210756981
+development_precise,RB,low_stocks,60,-0.013676343776953799,-3.8580936704556454
+development_precise,RB,high_stocks,126,-0.005398408033660816,-2.1760693802408198
+development_conservative,CL,low_stocks,78,-0.010287502764284102,-1.5817287936374966
+development_conservative,CL,high_stocks,452,-0.008587425677272068,-2.6547199892382056
+development_conservative,RB,low_stocks,107,-0.013599284326569316,-2.0293590367614462
+development_conservative,RB,high_stocks,167,-0.011263961577387523,-2.8391296690120127

@@ -171,7 +171,7 @@ def walk_forward(ev: pd.DataFrame, market: str, zcols: list[str], years: list[in
             continue
         pred = pd.DataFrame(index=test.index)
         pred["m0"] = train[f"{market.lower()}_drift"].mean()
-        sd = {}
+        sd, mean_fit = {}, {}
         for name, cols in (("m1", ctrl), ("m2", ctrl + zcols)):
             X, y, ok = _xy(train, market, cols)
             ok &= ~np.isnan(y)
@@ -179,14 +179,16 @@ def walk_forward(ev: pd.DataFrame, market: str, zcols: list[str], years: list[in
             Xt, _, okt = _xy(test, market, cols)
             p = beta[0] + Xt @ beta[1:]
             pred[name] = np.where(okt, p, np.nan)
-            sd[name] = float(np.std(beta[0] + X[ok] @ beta[1:], ddof=1))
+            fit = beta[0] + X[ok] @ beta[1:]
+            sd[name], mean_fit[name] = float(np.std(fit, ddof=1)), float(np.mean(fit))
         X, y, ok = _xy(train, market, ctrl + zcols)
         ok &= ~np.isnan(y)
         mu, sdv = X[ok].mean(axis=0), X[ok].std(axis=0, ddof=1)
         icpt, b = _ridge((X[ok] - mu) / sdv, y[ok], lam)
         Xt, _, okt = _xy(test, market, ctrl + zcols)
         pred["m3"] = np.where(okt, icpt + ((Xt - mu) / sdv) @ b, np.nan)
-        sd["m3"] = float(np.std(icpt + ((X[ok] - mu) / sdv) @ b, ddof=1))
+        fit = icpt + ((X[ok] - mu) / sdv) @ b
+        sd["m3"], mean_fit["m3"] = float(np.std(fit, ddof=1)), float(np.mean(fit))
         logit = LogisticRegression(C=1.0, max_iter=1000).fit((X[ok] - mu) / sdv, y[ok] > 0)
         prob = logit.predict_proba(np.nan_to_num((Xt - mu) / sdv))[:, 1]
         pred["m4_prob_up"] = np.where(okt, prob, np.nan)
@@ -196,6 +198,7 @@ def walk_forward(ev: pd.DataFrame, market: str, zcols: list[str], years: list[in
             pred["m5"] = np.where(okt, g.predict(np.nan_to_num(Xt)), np.nan)
         for name in ("m1", "m2", "m3"):
             pred[f"sd_fit_{name}"] = sd[name]
+            pred[f"mean_fit_{name}"] = mean_fit[name]
         pred["refit_year"] = year
         pred["n_train"] = int(ok.sum())
         out.append(pred)
@@ -235,5 +238,12 @@ def forecast_metrics(p: pd.DataFrame, label: str, models=("m1", "m2", "m3")) -> 
 
 
 def signal(p: pd.DataFrame, model: str) -> pd.Series:
-    """z = forecast / sd of the same refit's in-sample fitted values (known at refit)."""
-    return p[model] / p[f"sd_fit_{model}"]
+    """Standardised *conditional* forecast, known at the refit.
+
+    z = (forecast - mean fitted value) / sd of fitted values, both from the same
+    refit's training sample. Subtracting the mean removes the unconditional drift
+    (already the always-long benchmark), so the signal measures only what the
+    surprises and controls add. (Amendment A1, docs/04 §9: without it a heavily
+    shrunk model turned into a constant-sign bet on the historical mean.)
+    """
+    return (p[model] - p[f"mean_fit_{model}"]) / p[f"sd_fit_{model}"]

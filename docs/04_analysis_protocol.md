@@ -150,3 +150,22 @@ A strategy "works out of sample" only if all three hold:
 
 Anything weaker is reported as *no reliable evidence*. Coefficient findings require a Holm
 p-value below 0.05 in the test family.
+
+---
+
+## 9. Amendments made during development (before the spec freeze; test data untouched)
+
+**A1 — signal standardisation (2026-10-21).**
+- **Finding.** The first development run (registry v1, kept in
+  `reports/tables/experiments_development_v1.csv`) chose ridge $\lambda=1000$, the heaviest
+  penalty on the grid. Its forecasts were close to the training mean of the drift return.
+  Dividing them by the small dispersion of fitted values gave $|\hat z|>k$ in most weeks, with
+  the sign of the historical mean drift. For RB, 255 of 381 validation weeks passed the
+  threshold. The "surprise strategy" was mostly a constant short.
+- **Change.** $\hat z_t=(\hat r_t-\bar{\hat r}_{train})/\mathrm{sd}(\hat r_{train})$: the
+  forecast's deviation from the unconditional mean, standardised by the dispersion of the
+  fitted values. Both statistics come from the same refit. The unconditional drift is already
+  covered by the always-long benchmark.
+- **Disclosure.** I found the problem while investigating why the v1 development results were
+  negative. That is a researcher degree of freedom. The v1 trials stay in the trial count used
+  for the Deflated Sharpe Ratio, and the v1 results are reported alongside v2.

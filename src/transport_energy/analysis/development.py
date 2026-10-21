@@ -173,6 +173,10 @@ def main() -> None:
     regf = reg.frame()
     regf.to_csv(REPO_ROOT / "reports" / "tables" / "experiments_development.csv", index=False)
     strat = regf[regf["kind"] == "strategy"]
+    v1 = REPO_ROOT / "reports" / "tables" / "experiments_development_v1.csv"
+    if v1.exists():   # amendment A1: earlier trials still count against us
+        old = pd.read_csv(v1)
+        strat = pd.concat([strat, old[old["kind"] == "strategy"]], ignore_index=True)
     spec = {
         "frozen_on": pd.Timestamp.now().strftime("%Y-%m-%d"),
         "protocol": "docs/04_analysis_protocol.md",
