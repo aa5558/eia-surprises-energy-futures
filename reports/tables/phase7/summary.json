@@ -1,0 +1,81 @@
+{
+ "tag": "spec-freeze-v1",
+ "spec": {
+  "frozen_on": "2026-10-21",
+  "protocol": "docs/04_analysis_protocol.md",
+  "surprise_models": {
+   "crude": "seasonal_ar",
+   "gasoline": "seasonal_ar",
+   "distillate": "seasonal_ar",
+   "demand": "seasonal_ar"
+  },
+  "z_columns": [
+   "z_crude_seasonal_ar",
+   "z_gasoline_seasonal_ar",
+   "z_distillate_seasonal_ar",
+   "z_demand_seasonal_ar"
+  ],
+  "ridge_lambda": 1000.0,
+  "forecast_model": "m3",
+  "gbm_triggered": true,
+  "primary_rule": "threshold",
+  "threshold_k": 1.5,
+  "secondary_rule": "vol_scaled",
+  "roll_business_days": 5,
+  "cost_scenario_primary": "base",
+  "walk_forward": "annual refit each January on events with exit < 1 Jan; expanding",
+  "test_window": {
+   "start": "2017-01-01",
+   "end": "2024-04-05"
+  },
+  "dsr_inputs": {
+   "n_trials": 20,
+   "var_per_period_sharpe": 0.002350287360056847
+  },
+  "success_criteria": "bootstrap 95% CI of primary net Sharpe > 0 AND DSR > 0.95 AND SPA p < 0.05"
+ },
+ "primary": {
+  "gross_ann_return": -0.04080477044854886,
+  "gross_ann_vol": 0.08435277655334167,
+  "gross_sharpe": -0.48373950586849246,
+  "gross_sortino": -0.6235021662845844,
+  "gross_max_drawdown": -0.33313814151536114,
+  "net_ann_return": -0.042498214248021166,
+  "net_ann_vol": 0.08439873113115948,
+  "net_sharpe": -0.5035409144004428,
+  "net_sortino": -0.6469060443660006,
+  "net_max_drawdown": -0.3433510054240627,
+  "weeks": 379,
+  "costs_per_year_usd": 1693.4437994722955,
+  "contracts_traded_per_year": 178.63852242744065,
+  "per_period_sharpe_net": -0.06982856100633923,
+  "net_sharpe_CL": -0.4922378080303457,
+  "net_sharpe_RB": -0.355043821527269,
+  "bootstrap": {
+   "sharpe": -0.5035409144004428,
+   "ci_low": -1.1362012455136004,
+   "ci_high": 0.14280322444997265,
+   "p_sharpe_le_0": 0.9326
+  },
+  "deflated_sharpe": {
+   "sr_per_period": -0.06982856100633923,
+   "sr0_per_period": 0.09214586981986453,
+   "dsr": 0.000813450096071958,
+   "n_trials": 20
+  },
+  "random_sign_pctile": 0.108
+ },
+ "year_block_permutation_p": 0.91,
+ "spa": {
+  "spa_stat": 0.0,
+  "p_consistent": 1.0,
+  "best": "rob::conservative_timing",
+  "n_strategies": 16
+ },
+ "verdict": {
+  "ci_above_zero": false,
+  "dsr_above_0.95": false,
+  "spa_p_below_0.05": false,
+  "works_out_of_sample": false
+ }
+}

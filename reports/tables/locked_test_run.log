@@ -1,0 +1,13 @@
+table primary_family_test.csv (16 rows)
+table primary_family_test_conservative.csv (16 rows)
+table secondary_families_test.csv (6 rows)
+table h4_terciles_test.csv (4 rows)
+table walk_forward_predictions_test.csv (832 rows)
+table forecast_metrics_test.csv (2 rows)
+table strategy_test.csv (4 rows)
+table primary_trades_test.csv (832 rows)
+table primary_weekly_test.csv (379 rows)
+table random_sign_test.csv (1000 rows)
+table robustness_test.csv (20 rows)
+table year_block_permutation_test.csv (1000 rows)
+verdict: {'ci_above_zero': False, 'dsr_above_0.95': False, 'spa_p_below_0.05': False, 'works_out_of_sample': False}
