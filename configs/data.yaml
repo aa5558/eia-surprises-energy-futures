@@ -1,0 +1,35 @@
+# Data sources. Every series here was verified to download (keyless) on 2026-10-21
+# unless marked otherwise. See docs/01_research_design_and_data_feasibility.md.
+
+eia:
+  bulk_xls_url: "https://www.eia.gov/dnav/pet/hist_xls/{series}.xls"   # series = exact file stem, case-sensitive
+  wpsr_archive_url: "https://www.eia.gov/petroleum/supply/weekly/archive/"
+  attribution: "Source: U.S. Energy Information Administration (EIA)"
+
+  weekly:            # reference week ends Friday; released the following week
+    gasoline_product_supplied: { id: WGFUPUS2w, units: "kb/d" }
+    total_product_supplied:    { id: WRPUPUS2w, units: "kb/d" }
+    crude_stocks_ex_spr:       { id: WCESTUS1w, units: "kb" }
+    gasoline_stocks:           { id: WGTSTUS1w, units: "kb" }
+    distillate_stocks:         { id: WDISTUS1w, units: "kb" }
+    crude_production:          { id: WCRFPUS2w, units: "kb/d" }
+
+  futures_daily:     # NYMEX 14:30 ET settlements; EIA stopped publishing after 2024-04-05
+    cl_c1: { id: RCLC1d, units: "USD/bbl" }
+    cl_c2: { id: RCLC2d, units: "USD/bbl" }
+    cl_c3: { id: RCLC3d, units: "USD/bbl" }
+    rb_c1: { id: EER_EPMRR_PE1_Y35NY_DPGd, units: "USD/gal" }
+    rb_c2: { id: EER_EPMRR_PE2_Y35NY_DPGd, units: "USD/gal" }
+    rb_c3: { id: EER_EPMRR_PE3_Y35NY_DPGd, units: "USD/gal" }
+
+  spot_daily:        # context / EDA only — never used as tradable P&L
+    wti_spot: { id: RWTCd, units: "USD/bbl" }
+
+databento:           # NOT downloaded. Requires approval of the budget in docs/02_*.
+  dataset: GLBX.MDP3
+  symbols: ["CL.c.0", "CL.c.1", "CL.c.2", "RB.c.0", "RB.c.1", "RB.c.2"]
+  stype_in: continuous
+
+paths:
+  raw: data/raw
+  processed: data/processed

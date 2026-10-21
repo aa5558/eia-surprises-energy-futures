@@ -1,0 +1,29 @@
+# Data: raw downloads are reproducible from scripts; vendor data must never be committed
+data/raw/*
+data/processed/*
+data/external/*
+!data/**/.gitkeep
+
+# Secrets
+.env
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/

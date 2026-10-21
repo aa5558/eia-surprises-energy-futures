@@ -1,0 +1,58 @@
+# Pre-registered research parameters. Changing anything in this file after the
+# locked-test run must be logged in docs/experiment_log.md together with the reason.
+
+splits:
+  development_start: "1996-01-01"
+  development_end: "2016-12-31"
+  test_start: "2017-01-01"            # locked: guarded in code by transport_energy.integrity
+  precise_timing_start: "2011-08-01"  # first WPSR edition with an archived release date
+
+timing:
+  timezone: "America/New_York"
+  settlement_time: "14:30"            # NYMEX CL / RB settlement
+  standard_release: { weekday: 2, time: "10:30" }   # Wednesday (Mon=0)
+  # Assumption A (docs/02_*): in non-holiday weeks the report for reference Friday F is public
+  # by 14:29 ET on F + 7. Planned value 7; stays null (code refuses) until validated against
+  # the 2011-2026 archive in Phase 3. Pre-2011 holiday weeks are excluded from U2/U4.
+  conservative_release:
+    days_after_reference: null
+    assumed_by: "14:29"
+  # U4 conservative trading window: enter Friday F+7 settlement, exit Tuesday F+11 settlement.
+  conservative_exit_days_after_reference: 11
+
+contracts:
+  CL: { multiplier: 1000,  tick_size: 0.01,   unit: "USD/bbl", expiry_rule: cl }
+  RB: { multiplier: 42000, tick_size: 0.0001, unit: "USD/gal", expiry_rule: rb }
+
+roll:
+  business_days_before_expiry: 5      # sensitivity grid: [3, 5, 10]
+
+costs:                                # per contract, per side; commission levels are assumptions
+  scenarios:
+    optimistic:   { ticks: 0.5, commission_usd: 1.50 }
+    base:         { ticks: 1.0, commission_usd: 2.50 }
+    conservative: { ticks: 2.0, commission_usd: 4.00 }
+    stress:       { ticks: 4.0, commission_usd: 5.00 }
+
+capital:
+  base_usd: 1000000
+  max_gross_notional_multiple: 2.0
+  vol_target_annual: 0.10
+
+# Pre-registered hypothesis families (multiple-testing corrections apply within each family).
+hypotheses:
+  primary:
+    surprises: [crude_stocks_ex_spr, gasoline_stocks, distillate_stocks, gasoline_demand]
+    targets: [cl_announcement, rb_announcement, cl_drift, rb_drift]
+  secondary:
+    calendar_spread: { surprise: crude_stocks_ex_spr, target: cl_c1_minus_c2_change }
+    inventory_state:                  # H4: does the surprise effect depend on inventory level?
+      pairs:
+        - { surprise: crude_stocks_ex_spr, state: crude_stocks_ex_spr, target: cl }
+        - { surprise: gasoline_stocks,     state: gasoline_stocks,     target: rb }
+      state_definition: "z-score of PRIOR week's level vs same-week mean/std of prior 5 years"
+      specification: "continuous interaction s_t * L_{t-1}; one pre-set tercile check; no threshold search"
+
+annualization:
+  weekly: 52
+  daily: 252

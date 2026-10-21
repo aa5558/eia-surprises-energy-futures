@@ -1,0 +1,1 @@
+"""Signal-to-position rules."""
