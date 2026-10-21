@@ -5,6 +5,14 @@ eia:
   bulk_xls_url: "https://www.eia.gov/dnav/pet/hist_xls/{series}.xls"   # series = exact file stem, case-sensitive
   wpsr_archive_url: "https://www.eia.gov/petroleum/supply/weekly/archive/"
   attribution: "Source: U.S. Energy Information Administration (EIA)"
+  # Release-schedule documentation: the live page plus every archived copy (Internet
+  # Archive) of the three URLs EIA has used for it since 2002.
+  schedule_live_url: "https://www.eia.gov/petroleum/supply/weekly/schedule.php"
+  schedule_archived_urls:
+    - "eia.doe.gov/oil_gas/petroleum/data_publications/weekly_petroleum_status_report/schedule.html"
+    - "eia.gov/oil_gas/petroleum/data_publications/weekly_petroleum_status_report/schedule.html"
+    - "eia.gov/petroleum/supply/weekly/schedule.cfm"
+    - "eia.gov/petroleum/supply/weekly/schedule.php"
 
   weekly:            # reference week ends Friday; released the following week
     gasoline_product_supplied: { id: WGFUPUS2w, units: "kb/d" }
@@ -24,6 +32,20 @@ eia:
 
   spot_daily:        # context / EDA only — never used as tradable P&L
     wti_spot: { id: RWTCd, units: "USD/bbl" }
+
+# Exchange documentation for contract expiries (cmegroup.com blocks automated access, so
+# only archived copies are used). Rule text: NYMEX Rulebook ch. 200 (CL), ch. 191 (RB).
+cme:
+  calendar_archived_urls:
+    CL:
+      - "cmegroup.com/trading/energy/crude-oil/light-sweet-crude_product_calendar_futures.html"
+      - "cmegroup.com/markets/energy/crude-oil/light-sweet-crude.calendar.html"
+    RB:
+      - "cmegroup.com/trading/energy/refined-products/rbob-gasoline_product_calendar_futures.html"
+      - "cmegroup.com/markets/energy/refined-products/rbob-gasoline.calendar.html"
+  rulebook_archived:
+    CL: { url: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/2/200.pdf", captures: ["20150326124311", "20260505042106"] }
+    RB: { url: "https://www.cmegroup.com/content/dam/cmegroup/rulebook/NYMEX/1a/191.pdf", captures: ["20150326123235", "20240221100943"] }
 
 databento:           # NOT downloaded. Requires approval of the budget in docs/02_*.
   dataset: GLBX.MDP3

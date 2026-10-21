@@ -85,24 +85,39 @@ def build_event_table(
 
     Parameters
     ----------
-    releases : columns ``reference_week_end`` and tz-aware ``release_ts``.
+    releases : columns ``reference_week_end`` and tz-aware ``release_ts``; or, when the
+               release time is uncertain, ``release_ts_earliest`` and
+               ``release_ts_latest`` bounding it (see ``data.release_calendar``).
 
     Returns columns
     ---------------
-    pre_date   : last settlement before the release (start of the announcement window).
-    entry_date : first settlement after the release (end of the announcement window
-                 and earliest executable entry with daily data).
-    exit_date  : last settlement before the NEXT release, so a holding period never
-                 contains the next announcement. NaT for the final release.
+    pre_date   : last settlement before the (earliest possible) release: start of the
+                 announcement window.
+    entry_date : first settlement after the (latest possible) release: end of the
+                 announcement window and earliest executable entry with daily data.
+    exit_date  : last settlement before the NEXT release's earliest possible time, so a
+                 holding period never contains the next announcement. NaT for the final
+                 release.
+
+    Using the earliest bound to close windows and the latest to open them means an
+    uncertain release time can only make windows wider or entries later, never earlier.
     """
-    ev = releases.sort_values("release_ts").reset_index(drop=True).copy()
-    _require_tz(pd.DatetimeIndex(ev["release_ts"]), "release_ts")
-    ev["next_release_ts"] = ev["release_ts"].shift(-1)
+    ev = releases.copy()
+    if "release_ts_earliest" not in ev:
+        ev["release_ts_earliest"] = ev["release_ts"]
+        ev["release_ts_latest"] = ev["release_ts"]
+    _require_tz(pd.DatetimeIndex(ev["release_ts_earliest"]), "release_ts_earliest")
+    _require_tz(pd.DatetimeIndex(ev["release_ts_latest"]), "release_ts_latest")
+    if (ev["release_ts_latest"] < ev["release_ts_earliest"]).any():
+        raise ValueError("release_ts_latest before release_ts_earliest")
+    ev = ev.sort_values("release_ts_earliest").reset_index(drop=True)
+    ev["next_release_ts"] = ev["release_ts_earliest"].shift(-1)
     ev["pre_date"] = [
-        last_settlement_before(r, trading_days, settle_time, tz) for r in ev["release_ts"]
+        last_settlement_before(r, trading_days, settle_time, tz)
+        for r in ev["release_ts_earliest"]
     ]
     ev["entry_date"] = [
-        first_settlement_after(r, trading_days, settle_time, tz) for r in ev["release_ts"]
+        first_settlement_after(r, trading_days, settle_time, tz) for r in ev["release_ts_latest"]
     ]
     ev["exit_date"] = [
         pd.NaT if pd.isna(n) else last_settlement_before(n, trading_days, settle_time, tz)

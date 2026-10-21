@@ -63,3 +63,6 @@ ignore = [
     "PD010",  # .pivot raises on duplicates; .pivot_table would silently aggregate them
     "PD013",  # .stack is clearer than .melt for wide-to-long on an index
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/unit/test_release_calendar.py" = ["E501"]   # HTML fixtures contain unsplittable URLs
