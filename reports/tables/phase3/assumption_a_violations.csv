@@ -1,0 +1,5 @@
+data_ending,release_date,time_source,release_ts_latest,bound,holiday_week,violates,days_after_reference
+2013-10-11,2013-10-21,scheduled_documented,2013-10-21 10:30:00-04:00,2013-10-18 14:29:00-04:00,True,True,10
+2022-06-17,2022-06-29,scheduled_documented,2022-06-29 10:30:00-04:00,2022-06-24 14:29:00-04:00,True,True,12
+2023-11-03,2023-11-15,assumed_conservative,2023-11-15 23:59:59-05:00,2023-11-10 14:29:00-05:00,True,True,12
+2025-12-19,2025-12-29,scheduled_documented,2025-12-29 17:00:00-05:00,2025-12-26 14:29:00-05:00,True,True,10

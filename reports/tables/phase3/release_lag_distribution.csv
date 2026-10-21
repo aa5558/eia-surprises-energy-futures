@@ -1,0 +1,8 @@
+holiday_week,days_after_reference,releases
+False,5,633
+False,6,2
+True,5,40
+True,6,104
+True,7,10
+True,10,2
+True,12,2

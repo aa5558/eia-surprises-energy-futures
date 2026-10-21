@@ -1,0 +1,9 @@
+series,week,value_first,value_next_edition,diff,matches,period
+total_product_supplied,2012-01-27,17653.0,17704.0,51.0,False,development
+gasoline_product_supplied,2012-01-27,7967.0,8018.0,51.0,False,development
+crude_stocks_ex_spr,2016-09-30,499740.0,469100.0,-30640.0,False,development
+gasoline_stocks,2016-09-30,227405.0,227400.0,-5.0,False,development
+distillate_stocks,2016-09-30,160718.0,160700.0,-18.0,False,development
+crude_stocks_ex_spr,2016-10-14,468700.0,468711.0,11.0,False,development
+gasoline_stocks,2016-10-14,228000.0,227967.0,-33.0,False,development
+distillate_stocks,2016-10-14,155700.0,155732.0,32.0,False,development

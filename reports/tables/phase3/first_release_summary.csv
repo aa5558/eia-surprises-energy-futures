@@ -1,0 +1,13 @@
+series,period,weeks,matches,missing_in_history
+crude_production,development,283,283,0
+crude_production,test,510,510,0
+crude_stocks_ex_spr,development,283,10,0
+crude_stocks_ex_spr,test,510,509,0
+distillate_stocks,development,283,281,0
+distillate_stocks,test,510,509,0
+gasoline_product_supplied,development,283,282,0
+gasoline_product_supplied,test,510,510,0
+gasoline_stocks,development,283,281,0
+gasoline_stocks,test,510,509,0
+total_product_supplied,development,283,182,0
+total_product_supplied,test,510,343,0

@@ -74,15 +74,16 @@ def test_final_expiries_prefer_cme():
     assert cmp_["matches"].tolist() == [False]
 
 
-def _synthetic_nearbys(days, expiries, contango=0.5, noise=0.02, seed=0):
-    """EIA-style C1..C3 from contracts with a common random walk plus a fixed curve."""
+def _synthetic_nearbys(days, expiries, contango=0.5, noise=1.0, seed=0):
+    """EIA-style C1..C3: a common random walk (noisy, $1/day) plus a fixed convex curve."""
     rng = np.random.default_rng(seed)
     level = 60 + np.cumsum(rng.normal(0, noise, len(days)))
     labels = label_nearbys(days, expiries, depth=3)
     order = {c: i for i, c in enumerate(expiries["contract"])}
     out = {}
     for k in (1, 2, 3):
-        out[f"c{k}"] = [lv + contango * order[c] for lv, c in zip(level, labels[k], strict=True)]
+        out[f"c{k}"] = [lv + contango * (order[c] + 0.2 * order[c] ** 2)
+                        for lv, c in zip(level, labels[k], strict=True)]
     return pd.DataFrame(out, index=days)
 
 
@@ -90,6 +91,7 @@ def _expiries(days):
     ex = [days[i] for i in (20, 41, 62, 83)]
     later = [days[-1] + pd.Timedelta(days=30 * k) for k in (1, 2, 3)]
     return pd.DataFrame({"contract": list("ABCDEFG"), "expiry": ex + later})
+
 
 
 def test_settlement_diagnostic_detects_shifted_dates():

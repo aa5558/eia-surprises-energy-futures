@@ -6,17 +6,17 @@ Order of evidence:
 2. The rulebook rule on the scheduled business-day calendar elsewhere. Its accuracy is
    measured where both exist (rule vs CME) before it is trusted on earlier years.
 3. A settlement diagnostic that never sets a date. EIA's "contract 1" switches to the
-   next contract on the first settlement after expiry, so on a correctly dated expiry
-   ``e`` (next settlement ``d``) the roll hypothesis
+   next contract on the first settlement after expiry. Calendar *spreads* move far
+   less from day to day than outright prices, so compare spreads: if the roll happened
+   after ``e`` (next settlement ``d``), today's C1-C2 spread is the same contract pair
+   as yesterday's C2-C3 spread,
 
-       |C1(d) - C2(e)| + |C2(d) - C3(e)|        (each term: one contract, one day)
+       roll error    = |S12(d) - S23(e)|
+       no-roll error = |S12(d) - S12(e)|
 
-   should fit better than the no-roll hypothesis
-
-       |C1(d) - C1(e)| + |C2(d) - C2(e)|        (each term: one day plus a spread)
-
-   and on neighbouring days the reverse. When the C1-C2 spread is within a few ticks of
-   zero the two hypotheses cannot be told apart and the check is "uninformative".
+   and the margin ``no-roll - roll`` should be positive at the documented date and
+   negative on neighbouring days. When ``|S12(e) - S23(e)|`` is within a few ticks the
+   two hypotheses cannot be told apart and the check is "uninformative".
 """
 
 from __future__ import annotations
@@ -61,17 +61,18 @@ def final_expiries(rule: pd.DataFrame, cme: pd.DataFrame) -> pd.DataFrame:
 
 def settlement_diagnostic(
     nearby: pd.DataFrame, expiries: pd.DataFrame, tick: float, window: int = 2,
-    min_spread_ticks: float = 3.0,
+    min_spread_ticks: float = 5.0,
 ) -> pd.DataFrame:
     """Per expiry inside the price sample: does the roll fit best on the documented date?
 
     ``nearby`` has columns ``c1, c2, c3`` indexed by settlement date. For candidate
     roll days ``e_k`` (the documented expiry shifted by k = -window..window settlements)
-    the margin ``noroll - roll`` is computed; a positive margin favours a roll after e_k.
+    the margin ``noroll - roll`` is computed on spreads; positive favours a roll after e_k.
     """
     px = nearby[["c1", "c2", "c3"]].dropna()
     dates = px.index
     a = px.to_numpy(dtype=float)
+    s12, s23 = a[:, 0] - a[:, 1], a[:, 1] - a[:, 2]
     rows = []
     for _, ex in expiries.iterrows():
         e = ex["expiry"]
@@ -83,13 +84,12 @@ def settlement_diagnostic(
             i = i0 + k
             if i < 0 or i + 1 >= len(dates):
                 continue
-            today, nxt = a[i], a[i + 1]
-            roll = abs(nxt[0] - today[1]) + abs(nxt[1] - today[2])
-            noroll = abs(nxt[0] - today[0]) + abs(nxt[1] - today[1])
+            roll = abs(s12[i + 1] - s23[i])
+            noroll = abs(s12[i + 1] - s12[i])
             margins[k] = noroll - roll
-        spread = abs(a[i0, 0] - a[i0, 1])
+        separation = abs(s12[i0] - s23[i0])
         best = max(margins, key=margins.get) if margins else np.nan
-        if spread < min_spread_ticks * tick:
+        if separation < min_spread_ticks * tick:
             status = "uninformative"
         elif best == 0 and margins[0] > 0:
             status = "consistent"
@@ -97,7 +97,7 @@ def settlement_diagnostic(
             status = "inconsistent"
         rows.append({
             "contract": ex["contract"], "expiry": e, "source": ex.get("source", ""),
-            "expiry_in_price_data": bool(dates[i0] == e), "c1_c2_spread": spread,
+            "expiry_in_price_data": bool(dates[i0] == e), "s12_minus_s23": separation,
             "margin_at_expiry": margins.get(0, np.nan), "best_shift": best, "status": status,
         })
     return pd.DataFrame(rows)

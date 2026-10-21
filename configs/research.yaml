@@ -15,7 +15,7 @@ timing:
   # by 14:29 ET on F + 7. Planned value 7; stays null (code refuses) until validated against
   # the 2011-2026 archive in Phase 3. Pre-2011 holiday weeks are excluded from U2/U4.
   conservative_release:
-    days_after_reference: null
+    days_after_reference: 7            # validated Phase 3: 0 of 635 non-holiday releases (2011-08..2026-10) later than F+7 14:29
     assumed_by: "14:29"
   # U4 conservative trading window: enter Friday F+7 settlement, exit Tuesday F+11 settlement.
   conservative_exit_days_after_reference: 11

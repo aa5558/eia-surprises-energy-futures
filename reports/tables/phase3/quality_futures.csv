@@ -1,0 +1,13 @@
+series,period,n_obs,first,last,business_days_missing,dates_outside_business_calendar,non_positive_values
+cl_c1,development,8351,1983-04-04,2016-12-30,163,0,0
+cl_c1,test,1832,2017-01-03,2024-04-05,3,0,1
+cl_c2,development,7762,1985-01-02,2016-12-30,309,0,0
+cl_c2,test,1832,2017-01-03,2024-04-05,3,0,0
+cl_c3,development,8387,1983-03-30,2016-12-30,129,0,0
+cl_c3,test,1832,2017-01-03,2024-04-05,3,0,0
+rb_c1,development,2789,2005-10-03,2016-12-30,43,0,0
+rb_c1,test,1820,2017-01-03,2024-04-05,4,0,0
+rb_c2,development,2798,2005-10-03,2016-12-30,34,0,0
+rb_c2,test,1820,2017-01-03,2024-04-05,4,0,0
+rb_c3,development,2805,2005-10-03,2016-12-30,27,0,0
+rb_c3,test,1820,2017-01-03,2024-04-05,4,0,0

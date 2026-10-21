@@ -112,3 +112,10 @@ def test_conservative_windows_and_holiday_exclusion():
     assert row["pre_date"] == pd.Timestamp("2004-06-04")
     assert row["entry_date"] == pd.Timestamp("2004-06-11")   # Friday F+7 settlement
     assert row["exit_date"] == pd.Timestamp("2004-06-15")    # Tuesday F+11
+
+
+def test_first_release_overrides_history_where_available():
+    y = weekly_series(n=300)
+    fr = pd.Series([1.0], index=[y.index[200]])
+    t = su.surprise_table(y, "level", first_release=fr)
+    assert t["actual"].iloc[200] == 1.0 and t["actual"].iloc[199] == y.iloc[199]

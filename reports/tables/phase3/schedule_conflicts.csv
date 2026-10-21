@@ -1,0 +1,33 @@
+data_ending,scheduled_date,weekday,time,holiday,snapshot,source_url
+2008-08-29,2008-09-04,Thursday,10:30,Labor,2008-01-28 16:14:59,http://www.eia.doe.gov:80/oil_gas/petroleum/data_publications/weekly_petroleum_status_report/schedule.html
+2008-08-29,2008-09-04,Thursday,11:00,Labor,2008-06-14 18:11:46,http://www.eia.doe.gov:80/oil_gas/petroleum/data_publications/weekly_petroleum_status_report/schedule.html
+2008-10-10,2008-10-16,Thursday,10:30,Columbus,2008-01-28 16:14:59,http://www.eia.doe.gov:80/oil_gas/petroleum/data_publications/weekly_petroleum_status_report/schedule.html
+2008-10-10,2008-10-16,Thursday,11:00,Columbus,2008-06-14 18:11:46,http://www.eia.doe.gov:80/oil_gas/petroleum/data_publications/weekly_petroleum_status_report/schedule.html
+2008-11-07,2008-11-13,Thursday,10:30,Veterans,2008-01-28 16:14:59,http://www.eia.doe.gov:80/oil_gas/petroleum/data_publications/weekly_petroleum_status_report/schedule.html
+2008-11-07,2008-11-13,Thursday,11:00,Veterans,2008-06-14 18:11:46,http://www.eia.doe.gov:80/oil_gas/petroleum/data_publications/weekly_petroleum_status_report/schedule.html
+2013-10-11,2013-10-17,Thursday,11:00,Columbus,2013-10-07 02:54:42,http://www.eia.gov/petroleum/supply/weekly/schedule.cfm
+2013-10-11,2013-10-21,Monday,10:30,Columbus/EIA Closed,2013-10-19 17:40:47,http://www.eia.gov:80/petroleum/supply/weekly/schedule.cfm
+2013-12-20,2013-12-26,Thursday,11:00,Christmas,2013-10-07 02:54:42,http://www.eia.gov/petroleum/supply/weekly/schedule.cfm
+2013-12-20,2013-12-27,Friday,11:00,Christmas,2013-11-02 00:11:33,http://www.eia.gov:80/petroleum/supply/weekly/schedule.cfm?
+2013-12-27,2014-01-02,Thursday,11:00,New Year's,2013-10-07 02:54:42,http://www.eia.gov/petroleum/supply/weekly/schedule.cfm
+2013-12-27,2014-01-03,Friday,11:00,New Year's,2013-11-02 00:11:33,http://www.eia.gov:80/petroleum/supply/weekly/schedule.cfm?
+2022-06-17,2022-06-23,Thursday,11:00,Juneteenth,2021-10-09 06:56:17,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2022-06-17,2022-06-29,Wednesday,10:30,Juneteenth,2022-10-12 14:38:27,https://www.eia.gov/petroleum/supply/weekly//schedule.php
+2024-12-20,2024-12-26,Thursday,11:00,Christmas,2024-01-18 23:53:07,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2024-12-20,2024-12-27,Friday,13:00,Christmas,2024-12-25 06:59:27,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-01-17,2025-01-23,Thursday,11:00,Martin Luther King Jr. / Inauguration,2024-01-18 23:53:07,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-01-17,2025-01-23,Thursday,12:00,Martin Luther King Jr. Day / Inauguration,2026-10-21 19:22:47,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-02-14,2025-02-20,Thursday,11:00,President's,2024-11-27 18:32:14,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-02-14,2025-02-20,Thursday,12:00,President's Day,2026-10-21 19:22:47,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-05-23,2025-05-29,Thursday,11:00,Memorial,2024-11-27 18:32:14,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-05-23,2025-05-29,Thursday,12:00,Memorial Day,2026-10-21 19:22:47,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-08-29,2025-09-04,Thursday,11:00,Labor,2024-11-27 18:32:14,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-08-29,2025-09-04,Thursday,12:00,Labor Day,2026-10-21 19:22:47,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-10-10,2025-10-16,Thursday,11:00,Columbus,2024-11-27 18:32:14,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-10-10,2025-10-16,Thursday,12:00,Columbus Day,2026-10-21 19:22:47,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-11-07,2025-11-13,Thursday,11:00,Veterans,2024-11-27 18:32:14,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-11-07,2025-11-13,Thursday,12:00,Veterans Day,2026-10-21 19:22:47,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-12-19,2025-12-29,Monday,10:30,Christmas,2025-12-28 15:26:31,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2025-12-19,2025-12-29,Monday,17:00,Christmas,2026-10-21 19:22:47,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2026-01-16,2026-01-22,Thursday,11:00,Martin Luther King Jr.,2024-11-27 18:32:14,https://www.eia.gov/petroleum/supply/weekly/schedule.php
+2026-01-16,2026-01-22,Thursday,12:00,Martin Luther King Jr. Day,2026-10-21 19:22:47,https://www.eia.gov/petroleum/supply/weekly/schedule.php

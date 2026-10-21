@@ -42,7 +42,9 @@ def _num(text: str) -> float:
 
 
 def _date(text: str) -> pd.Timestamp:
-    return pd.to_datetime(text.strip(), format="%m/%d/%y")
+    t = text.strip()
+    fmt = "%m/%d/%Y" if len(t.rsplit("/", 1)[-1]) == 4 else "%m/%d/%y"   # both occur
+    return pd.to_datetime(t, format=fmt)
 
 
 def parse_table1(text: str) -> pd.DataFrame:
@@ -107,3 +109,21 @@ def week_to_week_revisions(first: pd.DataFrame, tolerance: float = 0.5) -> pd.Da
     m["diff"] = m["value_next_edition"] - m["value_first"]
     m["matches"] = m["diff"].abs() <= tolerance
     return m
+
+
+def point_in_time_targets(first: pd.DataFrame, kinds: dict[str, str]) -> pd.DataFrame:
+    """The weekly number each edition actually published, per series (wide, by week).
+
+    For stock series (``kind == 'change'``) the weekly change *as printed in that
+    edition*: current-week minus prior-week column. For flows (``'level'``) the
+    current-week value. Requires an ``edition`` column (one per archived report).
+    """
+    out = {}
+    for name, kind in kinds.items():
+        f = first[first["series"] == name]
+        wide = f.pivot_table(index="edition", columns="column", values="value")
+        week = f[f["column"] == "current"].set_index("edition")["week"]
+        vals = wide["current"] - wide["prior"] if kind == "change" else wide["current"]
+        s = pd.Series(vals.to_numpy(), index=pd.DatetimeIndex(week.reindex(vals.index)))
+        out[name] = s[~s.index.duplicated(keep="last")].sort_index()
+    return pd.DataFrame(out)

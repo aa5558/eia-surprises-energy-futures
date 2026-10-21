@@ -128,9 +128,18 @@ def standardize(surprise: pd.Series, min_periods: int = 52) -> pd.Series:
     return surprise / sd
 
 
-def surprise_table(level: pd.Series, kind: str) -> pd.DataFrame:
-    """Actual, forecasts, raw and standardized surprises for every model."""
+def surprise_table(level: pd.Series, kind: str, first_release: pd.Series | None = None
+                   ) -> pd.DataFrame:
+    """Actual, forecasts, raw and standardized surprises for every model.
+
+    ``first_release`` (optional) holds the values as first published (archived WPSR
+    editions); where present they replace the current history, so both the actual and
+    the model inputs are the numbers the market saw rather than later restatements.
+    """
     y = target_series(level, kind)
+    if first_release is not None:
+        fr = first_release.reindex(y.index)
+        y = fr.where(fr.notna(), y)
     f = expectations(y)
     out = pd.DataFrame({"actual": y})
     for m in MODELS:

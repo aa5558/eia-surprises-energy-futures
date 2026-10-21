@@ -140,3 +140,11 @@ def test_weekly_quality_splits_periods():
     assert q.loc["development", "missing_fridays"] == 1
     assert q.loc["test", "missing_fridays"] == 1
     assert q.loc["development", "non_positive_values"] == 1   # the made-up zero
+
+
+def test_point_in_time_targets_use_printed_change():
+    first = wpsr_tables.parse_table1(TABLE1).assign(edition="e1")
+    kinds = {"crude_stocks_ex_spr": "change", "gasoline_product_supplied": "level"}
+    t = wpsr_tables.point_in_time_targets(first, kinds)
+    assert t.loc["2012-03-02", "crude_stocks_ex_spr"] == pytest.approx(832.0)   # as printed
+    assert t.loc["2012-03-02", "gasoline_product_supplied"] == 8262.0

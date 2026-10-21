@@ -1,0 +1,14 @@
+path,url,downloaded_at,sha256,bytes
+eia/futures_daily/EER_EPMRR_PE1_Y35NY_DPGd.xls,https://www.eia.gov/dnav/pet/hist_xls/EER_EPMRR_PE1_Y35NY_DPGd.xls,2026-10-21T19:14:59+00:00,ef42698e7c7d0d33db467cdf36567bd377ced89f6ce55dc0bc02d94656aff491,271872
+eia/futures_daily/EER_EPMRR_PE2_Y35NY_DPGd.xls,https://www.eia.gov/dnav/pet/hist_xls/EER_EPMRR_PE2_Y35NY_DPGd.xls,2026-10-21T19:15:00+00:00,a85384556d1b5d81a78da23d78eba0987d185421d0cc1c1fc6ba0387249feae9,272384
+eia/futures_daily/EER_EPMRR_PE3_Y35NY_DPGd.xls,https://www.eia.gov/dnav/pet/hist_xls/EER_EPMRR_PE3_Y35NY_DPGd.xls,2026-10-21T19:15:00+00:00,5a7501f21c68aa14c45c7523cc7b85ca7a8bf89e3f1eef0c749167db6250717a,272896
+eia/futures_daily/RCLC1d.xls,https://www.eia.gov/dnav/pet/hist_xls/RCLC1d.xls,2026-10-21T19:14:58+00:00,85364c1f20f27b2b56cb5c9af4819f5cd80a297bac2800e9be317a918aa45f38,494592
+eia/futures_daily/RCLC2d.xls,https://www.eia.gov/dnav/pet/hist_xls/RCLC2d.xls,2026-10-21T19:14:58+00:00,d9cb3e20b9ff4878961b1cdbe64052dcbb6b24f8574a0425b6247bbb555afbc8,468480
+eia/futures_daily/RCLC3d.xls,https://www.eia.gov/dnav/pet/hist_xls/RCLC3d.xls,2026-10-21T19:14:59+00:00,362bdeb05949125377c3dff08491bf40dbcf0573015069c4992ca28d321bfd8c,496640
+eia/spot_daily/RWTCd.xls,https://www.eia.gov/dnav/pet/hist_xls/RWTCd.xls,2026-10-21T19:15:01+00:00,7f2f5b92d5330ef9707e25808eb9498a0d59f26f8716caf1adf1692176b23369,471552
+eia/weekly/WCESTUS1w.xls,https://www.eia.gov/dnav/pet/hist_xls/WCESTUS1w.xls,2026-10-21T19:14:56+00:00,1d558024381f37816f256db83a37cbf56078d9894edda2dcb20bbf455f49bfd5,130048
+eia/weekly/WCRFPUS2w.xls,https://www.eia.gov/dnav/pet/hist_xls/WCRFPUS2w.xls,2026-10-21T19:14:57+00:00,498bcd17f6c13b9df315a0472e84f62e419f7dedbc1dcc7dc540c7654d4395b7,129536
+eia/weekly/WDISTUS1w.xls,https://www.eia.gov/dnav/pet/hist_xls/WDISTUS1w.xls,2026-10-21T19:14:57+00:00,edae653d0d50b1f3ea966f03007c7b11faa75131aea67191310a6d59d6b4b9cc,130048
+eia/weekly/WGFUPUS2w.xls,https://www.eia.gov/dnav/pet/hist_xls/WGFUPUS2w.xls,2026-10-21T19:14:55+00:00,3f451306ae8a07b3175cc5fc7911d009f189d96e3dd83be1ab3970d1143db673,110592
+eia/weekly/WGTSTUS1w.xls,https://www.eia.gov/dnav/pet/hist_xls/WGTSTUS1w.xls,2026-10-21T19:14:56+00:00,9d56ee3645f388b4542301000865de9bfcc3b5a1108886cc06fc2c7809b7d4a9,113152
+eia/weekly/WRPUPUS2w.xls,https://www.eia.gov/dnav/pet/hist_xls/WRPUPUS2w.xls,2026-10-21T19:14:55+00:00,157eddae615d4d6c878557ee5e75d3e6a171b08faafe4f5406671d3097aff506,111104

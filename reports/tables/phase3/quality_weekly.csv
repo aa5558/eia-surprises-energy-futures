@@ -1,0 +1,13 @@
+series,period,n_obs,first,last,missing_fridays,non_friday_dates,non_positive_values,duplicate_dates
+gasoline_product_supplied,development,1351,1991-02-08,2016-12-30,1,0,0,0
+gasoline_product_supplied,test,511,2017-01-06,2026-10-16,0,0,0,0
+total_product_supplied,development,1364,1990-11-09,2016-12-30,1,0,0,0
+total_product_supplied,test,511,2017-01-06,2026-10-16,0,0,0,0
+crude_stocks_ex_spr,development,1788,1982-08-20,2016-12-30,6,0,0,0
+crude_stocks_ex_spr,test,511,2017-01-06,2026-10-16,0,0,0,0
+gasoline_stocks,development,1409,1990-01-05,2016-12-30,0,0,0,0
+gasoline_stocks,test,511,2017-01-06,2026-10-16,0,0,0,0
+distillate_stocks,development,1788,1982-08-20,2016-12-30,6,0,0,0
+distillate_stocks,test,511,2017-01-06,2026-10-16,0,0,0,0
+crude_production,development,1771,1983-01-07,2016-12-30,3,0,0,0
+crude_production,test,511,2017-01-06,2026-10-16,0,0,0,0

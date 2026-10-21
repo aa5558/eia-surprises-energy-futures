@@ -1,0 +1,13 @@
+series,period,weeks,unchanged_next_edition
+crude_production,development,282,282
+crude_production,test,507,507
+crude_stocks_ex_spr,development,282,280
+crude_stocks_ex_spr,test,507,505
+distillate_stocks,development,282,280
+distillate_stocks,test,507,506
+gasoline_product_supplied,development,282,281
+gasoline_product_supplied,test,507,507
+gasoline_stocks,development,282,280
+gasoline_stocks,test,507,505
+total_product_supplied,development,282,281
+total_product_supplied,test,507,506
