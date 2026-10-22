@@ -27,6 +27,10 @@ dev = [
     "pytest-cov>=5.0",
     "ruff>=0.7",
 ]
+docs = [
+    "pypdfium2>=5.14.0",
+    "reportlab>=5.1.0",
+]
 notebooks = [
     "jupyterlab>=4.2",
     "ipykernel>=6.29",

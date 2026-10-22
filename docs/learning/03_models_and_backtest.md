@@ -24,8 +24,8 @@ the weekly change in stocks, or the level of demand.
 
 | Series | RMSE, 5-yr mean | RMSE, seasonal + AR(1) |
 |---|---|---|
-| Demand | 410 kb/d | 231 kb/d |
-| Crude | 3,751 kb | 3,589 kb |
+| Demand | 410 kb/d | 232 kb/d |
+| Crude | 3,753 kb | 3,594 kb |
 
 - Diebold–Mariano tests on squared errors confirm the differences. Model 3 won all four series.
 - Why the 5-year mean is bad for demand: it ignores the trend, giving a bias of +146 kb/d.

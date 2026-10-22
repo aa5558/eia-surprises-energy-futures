@@ -166,10 +166,10 @@ $$r^w_{m,t} = \alpha + \sum_{j=1}^4 \beta_j z_{j,t} + \delta' x_{m,t} + \varepsi
 
 | Series | 5-yr mean | Seasonal | Seasonal + AR(1) |
 |---|---|---|---|
-| Crude stocks Δ (kb) | 3,751 | 3,597 | **3,589** |
+| Crude stocks Δ (kb) | 3,753 | 3,601 | **3,594** |
 | Gasoline stocks Δ (kb) | 2,361 | 2,263 | **2,208** |
 | Distillate stocks Δ (kb) | 1,994 | 1,913 | **1,833** |
-| Gasoline demand (kb/d) | 410 | 264 | **231** |
+| Gasoline demand (kb/d) | 410 | 264 | **232** |
 
 Seasonal + AR(1) wins all four. Diebold–Mariano p < 0.01 against the 5-year mean in every
 series. The 5-year mean is biased by +146 kb/d for demand because it ignores the trend.
@@ -268,7 +268,7 @@ Returns are on a fixed $1M capital base, not compounded, with 52 weeks a year.
 - **Trades.** The primary strategy made 132 trades (62 CL, 70 RB), each about 4.5 contracts,
   with a 43.9% win rate. 7 events were skipped because a settlement was missing.
 - **Where the losses came from.** 2020 accounts for −$246k of the −$310k total. Excluding
-  2020-H1, the net Sharpe is still −0.28.
+  2020-H1, the net Sharpe is still −0.27.
 
 ![Development vs test](../reports/figures/report/strategy_dev_vs_test.png)
 
