@@ -17,3 +17,9 @@ This log feeds the multiple-testing corrections (Deflated Sharpe Ratio, SPA test
 **Post-test note.** Nothing in `src/` or `configs/` changed after `spec-freeze-v1`. Report figures are drawn by
 `scripts/report_figures.py` from saved tables. Known reporting quirk in the frozen code: per-market Sharpe
 columns of the `excl_2020H1` robustness row do not apply the exclusion (the combined figure does).
+
+**History note.** Before publication the Git history was rewritten once, for privacy only: contact details
+were replaced and one non-analysis document was removed. One User-Agent string in `download.py` changed
+in every commit, including `spec-freeze-v1`. No calculation, specification or result changed, and the
+locked test was not re-run. Details and the old-to-new commit hashes are in
+[repository_history.md](repository_history.md).

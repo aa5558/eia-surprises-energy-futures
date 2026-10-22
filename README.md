@@ -1,11 +1,24 @@
 # Do EIA Gasoline-Demand and Inventory Surprises Predict Energy Futures?
 
+[![CI](https://github.com/aa5558/eia-surprises-energy-futures/actions/workflows/ci.yml/badge.svg)](https://github.com/aa5558/eia-surprises-energy-futures/actions/workflows/ci.yml)
+![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 **A point-in-time event study and pre-registered out-of-sample trading test for WTI crude oil
 (CL) and RBOB gasoline (RB) futures, 1996–2024.**
 
 📄 **[Full research paper (PDF, 12 pages)](reports/Energy_Futures_Research.pdf)** ·
 **[One-page summary (PDF)](reports/Research_Summary.pdf)** ·
-[Markdown report](docs/REPORT.md) · [Interview notes](docs/INTERVIEW_PREP.md)
+[Markdown report](docs/REPORT.md)
+
+> **In brief**
+> - **Finding:** gasoline-inventory surprises move RBOB futures on the day of the EIA release.
+>   This survives a multiple-testing correction in a locked 2017–2024 test.
+> - **Negative result:** the surprises do not predict returns *after* the release. The
+>   pre-registered trading strategy lost money out of sample and failed all three success
+>   criteria.
+> - **Method:** point-in-time data, a protocol committed before any futures return was examined,
+>   and a test period locked in code until the specification was frozen.
 
 ---
 
@@ -29,6 +42,8 @@ This project does four things:
 | **Q1** | Do surprises move futures between the settlements just before and just after the release? | No: a diagnostic of the surprise measure |
 | **Q2** | Do surprises predict returns from the first settlement after the release to the last settlement before the next one? | Yes |
 
+![Event timeline: announcement window (Q1) and drift window (Q2)](reports/figures/paper/event_timeline.png)
+
 ## Key findings
 
 > **The announcement-day reaction is real. The post-release trading strategy failed.**
@@ -41,6 +56,14 @@ This project does four things:
 - The crude-inventory → WTI reaction, strong in 2011–2016 (t = −4.68), **did not replicate**
   (t = −1.51).
 
+![Release-day reaction, development vs locked test](reports/figures/report/q1_dev_vs_test.png)
+
+Of the 16 pre-registered tests, only RBOB ← gasoline survives the Holm correction. Two CL
+announcement coefficients pass ±1.96 before correction (Holm p = 0.20 and 0.27). No drift
+coefficient comes close.
+
+![t-statistics for the 16 pre-registered tests, locked test](reports/figures/phase7/test_family_t_stats.png)
+
 ### ❌ Not supported: post-release drift and the trading strategy (Q2)
 
 - **No post-release drift:** all 8 drift coefficients have Holm p = 1.00.
@@ -49,8 +72,6 @@ This project does four things:
   95% CI [−1.14, +0.14], Deflated Sharpe Ratio 0.0008, Hansen SPA p = 1.00. It failed all three
   pre-registered success criteria.
 - **Costs were not the cause.** Base costs were $12.3k against a $297k gross loss.
-
-![Release-day reaction, development vs locked test](reports/figures/report/q1_dev_vs_test.png)
 
 ## Performance: locked out-of-sample test
 
@@ -108,33 +129,73 @@ out-of-sample error; a seasonal regression with AR(1) residuals won for every se
 - The locked test was run once from `spec-freeze-v1`. A re-run produced byte-identical tables.
 - One development-stage amendment is disclosed and counted against the results.
 - Every specification tried is in the [experiment log](docs/experiment_log.md).
+- Git history was rewritten once before publication, for privacy only; no code logic, data or
+  result changed. See the [repository history note](docs/repository_history.md). Commit dates
+  show the order of the work but are not independent proof of timing.
+
+## Limitations
+
+- **Daily settlements** cannot see the first minutes after the 10:30 release.
+- **Power:** the 379-week test can detect only large effects (correlation ≈ 0.10).
+- **Model-based surprises** stand in for consensus forecasts.
+- **Before 2011** the analysis relies on restated history.
+- **The futures data ends on 2024-04-05**, when EIA stopped publishing it.
+
+See §13 of the [report](docs/REPORT.md) for the full list.
 
 ## Reproduction
 
 Requires [uv](https://docs.astral.sh/uv/), which installs Python 3.12 and the locked
-dependencies.
+dependencies. Clone with tags (the default), because the locked test checks the
+`spec-freeze-v1` tag.
 
 ```bash
+git clone https://github.com/aa5558/eia-surprises-energy-futures.git
+cd eia-surprises-energy-futures
 uv sync
-uv run pytest && uv run ruff check .                        # 117 tests on synthetic data, lint
-
-uv run python -m transport_energy.data.build                # download + validate (~30 min); --offline re-parses cache
-uv run python -m transport_energy.analysis.eda              # exploratory analysis (development data only)
-uv run python -m transport_energy.analysis.development      # model selection -> configs/frozen_spec.yaml
-TEQ_UNLOCK_TEST=spec-freeze-v1 \
-  uv run python -m transport_energy.analysis.locked_test    # the locked out-of-sample test
-
-uv run python scripts/report_figures.py                     # report figures from saved tables
-uv run python scripts/paper_figures.py
-uv run --group docs python scripts/build_papers.py          # PDFs (every number checked against reports/tables/)
 ```
 
-**Where things are**
-- Raw downloads go to `data/raw/`. They are not committed and are listed with SHA-256 hashes in
-  `data/raw/MANIFEST.json`.
-- Result tables are in [`reports/tables/`](reports/tables/). The out-of-sample results are in
-  [`reports/tables/phase7/`](reports/tables/phase7/).
-- Figures are in [`reports/figures/`](reports/figures/).
+**1. Tests and lint (no data or network needed).** 117 tests on synthetic data with known
+answers. The same checks run in CI on every push.
+
+```bash
+uv run pytest
+uv run ruff check .
+```
+
+**2. Figures and PDFs from the saved result tables (no data download needed).**
+
+```bash
+uv run python scripts/report_figures.py
+uv run python scripts/paper_figures.py
+uv run --group docs python scripts/build_papers.py   # every number checked against reports/tables/
+```
+
+**3. Full pipeline from public data.** Downloads EIA files and archived EIA/CME pages (about
+30 minutes). Raw files go to `data/raw/` and are recorded with SHA-256 hashes in
+`data/raw/MANIFEST.json`; they are not committed.
+
+```bash
+uv run python -m transport_energy.data.build             # download + validate; --offline re-parses the cache
+uv run python -m transport_energy.analysis.eda           # exploratory analysis (development data only)
+uv run python -m transport_energy.analysis.development   # model selection -> configs/frozen_spec.yaml
+```
+
+**4. The locked out-of-sample test.** It has already been run once, and its outputs are in
+[`reports/tables/phase7/`](reports/tables/phase7/). To confirm that the code and configuration
+in your checkout are exactly the frozen ones, without running the test:
+
+```bash
+TEQ_UNLOCK_TEST=spec-freeze-v1 uv run python -c \
+  "from transport_energy.analysis.locked_test import verify_frozen; print(verify_frozen())"
+```
+
+Re-running the test after step 3 executes the same frozen procedure and overwrites
+`reports/tables/phase7/`. It refuses to start if `src/` or `configs/` differ from the tag.
+
+```bash
+TEQ_UNLOCK_TEST=spec-freeze-v1 uv run python -m transport_energy.analysis.locked_test
+```
 
 ## Repository layout
 
@@ -151,18 +212,12 @@ src/transport_energy/
 tests/        unit + integration tests on synthetic data with known answers
 scripts/      presentation: figures and PDFs from saved result tables
 docs/         design docs, protocol, data-quality report, experiment log, report, learning notes
-reports/      result tables, figures, PDFs
+reports/
+  tables/       result tables; phase7/ holds the locked-test results
+  figures/      figures; phase7/ holds the locked-test figures
+                (phase7_dryrun_dev/ in both: development-data dry run, mechanics only, not results)
+  *.pdf         research paper and one-page summary
 ```
-
-## Limitations
-
-- **Daily settlements** cannot see the first minutes after the 10:30 release.
-- **Power:** the 379-week test can detect only large effects (correlation ≈ 0.10).
-- **Model-based surprises** stand in for consensus forecasts.
-- **Before 2011** the analysis relies on restated history.
-- **The futures data ends on 2024-04-05**, when EIA stopped publishing it.
-
-See §13 of the [report](docs/REPORT.md) for the full list.
 
 ## Data attribution
 
@@ -170,5 +225,9 @@ U.S. Energy Information Administration (EIA): Weekly Petroleum Status Report and
 series (public domain). NYMEX contract rules: CME Group NYMEX Rulebook chapters 200 and 191.
 Archived EIA and CME pages come from the Internet Archive. No vendor data is used or
 redistributed.
+
+## License
+
+Code is released under the [MIT License](LICENSE).
 
 *Author: Amit Aviv, Columbia University (Mathematics & Economics).*

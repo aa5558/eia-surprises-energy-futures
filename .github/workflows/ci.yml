@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests and lint (synthetic data, no network)
+    runs-on: ubuntu-latest
+    env:
+      UV_FROZEN: "1"
+      UV_NO_GROUP: notebooks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install locked dependencies
+        run: uv sync
+      - name: Tests
+        run: uv run pytest
+      - name: Lint
+        run: uv run ruff check .
